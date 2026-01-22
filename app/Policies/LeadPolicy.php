@@ -12,7 +12,7 @@ class LeadPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('view leads');
     }
 
     /**
@@ -20,7 +20,7 @@ class LeadPolicy
      */
     public function view(User $user, Lead $lead): bool
     {
-        return true;
+        return $user->checkPermissionTo('view leads');
     }
 
     /**
@@ -28,7 +28,7 @@ class LeadPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('create leads');
     }
 
     /**
@@ -36,7 +36,7 @@ class LeadPolicy
      */
     public function update(User $user, Lead $lead): bool
     {
-        return true;
+        return $user->checkPermissionTo('edit leads');
     }
 
     /**
@@ -44,7 +44,7 @@ class LeadPolicy
      */
     public function delete(User $user, Lead $lead): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete leads');
     }
 
     /**
@@ -52,7 +52,7 @@ class LeadPolicy
      */
     public function restore(User $user, Lead $lead): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete leads');
     }
 
     /**
@@ -60,6 +60,6 @@ class LeadPolicy
      */
     public function forceDelete(User $user, Lead $lead): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete leads');
     }
 }

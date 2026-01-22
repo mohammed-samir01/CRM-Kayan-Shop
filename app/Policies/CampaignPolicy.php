@@ -12,7 +12,7 @@ class CampaignPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('view campaigns');
     }
 
     /**
@@ -20,7 +20,7 @@ class CampaignPolicy
      */
     public function view(User $user, Campaign $campaign): bool
     {
-        return true;
+        return $user->checkPermissionTo('view campaigns');
     }
 
     /**
@@ -28,7 +28,7 @@ class CampaignPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('create campaigns');
     }
 
     /**
@@ -36,7 +36,7 @@ class CampaignPolicy
      */
     public function update(User $user, Campaign $campaign): bool
     {
-        return true;
+        return $user->checkPermissionTo('edit campaigns');
     }
 
     /**
@@ -44,7 +44,7 @@ class CampaignPolicy
      */
     public function delete(User $user, Campaign $campaign): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete campaigns');
     }
 
     /**
@@ -52,7 +52,7 @@ class CampaignPolicy
      */
     public function restore(User $user, Campaign $campaign): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete campaigns');
     }
 
     /**
@@ -60,6 +60,6 @@ class CampaignPolicy
      */
     public function forceDelete(User $user, Campaign $campaign): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete campaigns');
     }
 }

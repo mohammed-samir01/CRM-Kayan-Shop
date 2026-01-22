@@ -19,6 +19,17 @@ class UsersSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
+        // Create Kayan Admin
+        $kayanAdmin = User::firstOrCreate(
+            ['email' => 'Kayan.shop1020@gmail.com'],
+            [
+                'name' => 'Kayan Admin',
+                'password' => Hash::make('531998Nayera2050'),
+                'role' => 'admin',
+            ]
+        );
+        $kayanAdmin->assignRole('admin');
+
         // Create Manager User
         $manager = User::create([
             'name' => 'Manager User',

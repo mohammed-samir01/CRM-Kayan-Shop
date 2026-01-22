@@ -98,7 +98,7 @@ class LeadController extends Controller
         $this->authorize('delete', $lead);
 
         $lead->delete();
-        
+
         \App\Services\ActivityLogger::log('تم حذف العميل', $lead);
 
         return redirect()->route('leads.index')

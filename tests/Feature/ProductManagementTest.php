@@ -13,9 +13,16 @@ class ProductManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    }
+
     public function test_user_can_view_products_page()
     {
         $user = User::factory()->create();
+        $user->givePermissionTo('view products');
 
         $response = $this->actingAs($user)->get(route('products.index'));
 
@@ -26,6 +33,7 @@ class ProductManagementTest extends TestCase
     public function test_user_can_create_product()
     {
         $user = User::factory()->create();
+        $user->givePermissionTo(['view products', 'create products']);
 
         $productData = [
             'name' => 'Test Product',
@@ -50,6 +58,7 @@ class ProductManagementTest extends TestCase
     public function test_user_can_update_product()
     {
         $user = User::factory()->create();
+        $user->givePermissionTo(['view products', 'edit products']);
         $product = Product::create([
             'name' => 'Old Name',
             'price' => 50,
@@ -79,6 +88,7 @@ class ProductManagementTest extends TestCase
     public function test_user_can_delete_product()
     {
         $user = User::factory()->create();
+        $user->givePermissionTo(['view products', 'delete products']);
         $product = Product::create([
             'name' => 'To Delete',
             'price' => 10,

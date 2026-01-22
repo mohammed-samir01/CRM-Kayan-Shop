@@ -13,9 +13,16 @@ class RolePermissionTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    }
+
     public function test_admin_can_delete_lead()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
         $lead = Lead::factory()->create();
 
         $response = $this->actingAs($admin)->delete(route('leads.destroy', $lead));
@@ -26,7 +33,11 @@ class RolePermissionTest extends TestCase
 
     public function test_staff_cannot_delete_lead()
     {
-        $staff = User::factory()->create(['role' => 'staff']);
+        $staff = User::factory()->create();
+        $staff->assignRole('agent'); // 'staff' role doesn't exist in seeder, 'agent' does
+        // But agent DOES have delete leads permission? Let's check seeder.
+        // Seeder says Agent has: view dashboard, view leads, create leads, edit leads, view orders, create orders, view products, view campaigns.
+        // Agent does NOT have delete leads. So this test should pass (Forbidden).
         $lead = Lead::factory()->create();
 
         $response = $this->actingAs($staff)->delete(route('leads.destroy', $lead));
@@ -37,7 +48,8 @@ class RolePermissionTest extends TestCase
 
     public function test_admin_can_delete_order()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
         $lead = Lead::factory()->create();
         $order = Order::factory()->create(['lead_id' => $lead->id]);
 
@@ -49,7 +61,8 @@ class RolePermissionTest extends TestCase
 
     public function test_staff_cannot_delete_order()
     {
-        $staff = User::factory()->create(['role' => 'staff']);
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
         $lead = Lead::factory()->create();
         $order = Order::factory()->create(['lead_id' => $lead->id]);
 
@@ -61,7 +74,8 @@ class RolePermissionTest extends TestCase
 
     public function test_admin_can_delete_campaign()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
         $campaign = Campaign::factory()->create();
 
         $response = $this->actingAs($admin)->delete(route('campaigns.destroy', $campaign));
@@ -72,7 +86,8 @@ class RolePermissionTest extends TestCase
 
     public function test_staff_cannot_delete_campaign()
     {
-        $staff = User::factory()->create(['role' => 'staff']);
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
         $campaign = Campaign::factory()->create();
 
         $response = $this->actingAs($staff)->delete(route('campaigns.destroy', $campaign));
@@ -83,8 +98,12 @@ class RolePermissionTest extends TestCase
 
     public function test_delete_button_visibility()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
-        $staff = User::factory()->create(['role' => 'staff']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
+        
         $lead = Lead::factory()->create();
 
         // Admin should see delete button (checking for the form action url or button text)
@@ -100,8 +119,12 @@ class RolePermissionTest extends TestCase
 
     public function test_order_delete_button_visibility_in_lead_show()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
-        $staff = User::factory()->create(['role' => 'staff']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
+        
         $lead = Lead::factory()->create();
         $order = Order::factory()->create(['lead_id' => $lead->id]);
 
@@ -118,7 +141,8 @@ class RolePermissionTest extends TestCase
 
     public function test_admin_can_access_user_management()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
 
         $response = $this->actingAs($admin)->get(route('users.index'));
 
@@ -127,7 +151,8 @@ class RolePermissionTest extends TestCase
 
     public function test_staff_cannot_access_user_management()
     {
-        $staff = User::factory()->create(['role' => 'staff']);
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
 
         $response = $this->actingAs($staff)->get(route('users.index'));
 

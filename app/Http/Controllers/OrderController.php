@@ -136,6 +136,8 @@ class OrderController extends Controller
                         Notification::send($admins, new OrderConfirmedNotification($order));
                     }
                 }
+
+                \App\Services\ActivityLogger::log('تم تحديث الطلب', $order, ['changes' => $order->getChanges()]);
             });
 
             return redirect()->route('leads.show', $order->lead_id)
@@ -151,6 +153,8 @@ class OrderController extends Controller
 
         $leadId = $order->lead_id;
         $order->delete();
+
+        \App\Services\ActivityLogger::log('تم حذف الطلب', $order);
 
         return redirect()->route('leads.show', $leadId)
             ->with('success', 'تم حذف الطلب بنجاح');

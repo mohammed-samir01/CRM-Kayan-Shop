@@ -11,9 +11,16 @@ class InvoiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    }
+
     public function test_staff_can_download_invoice()
     {
-        $staff = User::factory()->create(['role' => 'staff']);
+        $staff = User::factory()->create();
+        $staff->assignRole('agent');
         $order = Order::factory()->create();
 
         $response = $this->actingAs($staff)->get(route('orders.invoice', $order));
@@ -24,7 +31,8 @@ class InvoiceTest extends TestCase
 
     public function test_admin_can_download_invoice()
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
         $order = Order::factory()->create();
 
         $response = $this->actingAs($admin)->get(route('orders.invoice', $order));

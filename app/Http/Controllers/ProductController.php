@@ -12,6 +12,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Product::class);
         $products = Product::latest()->paginate(10);
         return view('products.index', compact('products'));
     }
@@ -21,6 +22,7 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Product::class);
         return view('products.create');
     }
 
@@ -29,6 +31,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Product::class);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100|unique:products,sku',
@@ -57,6 +60,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $this->authorize('view', $product);
         return view('products.show', compact('product'));
     }
 
@@ -65,6 +69,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
         return view('products.edit', compact('product'));
     }
 
@@ -73,6 +78,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100|unique:products,sku,' . $product->id,
@@ -101,6 +107,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
         $product->delete();
         return redirect()->route('products.index')->with('success', 'تم حذف المنتج بنجاح');
     }

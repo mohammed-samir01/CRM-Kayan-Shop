@@ -12,7 +12,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Almarai', 'Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Cairo', 'Almarai', 'Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
     },

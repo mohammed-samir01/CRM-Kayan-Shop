@@ -11,9 +11,16 @@ class CampaignValidationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    }
+
     public function test_campaign_name_must_be_unique_on_creation(): void
     {
         $user = User::factory()->create();
+        $user->assignRole('manager');
         Campaign::create([
             'name' => 'Existing Campaign',
             'platform' => 'Facebook',
@@ -34,6 +41,7 @@ class CampaignValidationTest extends TestCase
     public function test_campaign_name_must_be_unique_on_update(): void
     {
         $user = User::factory()->create();
+        $user->assignRole('manager');
         $campaign1 = Campaign::create([
             'name' => 'Campaign 1',
             'platform' => 'Facebook',
@@ -60,6 +68,7 @@ class CampaignValidationTest extends TestCase
     public function test_campaign_can_be_updated_with_same_name(): void
     {
         $user = User::factory()->create();
+        $user->assignRole('manager');
         $campaign = Campaign::create([
             'name' => 'My Campaign',
             'platform' => 'Facebook',
@@ -81,6 +90,7 @@ class CampaignValidationTest extends TestCase
     public function test_campaign_platform_must_be_valid_enum(): void
     {
         $user = User::factory()->create();
+        $user->assignRole('manager');
 
         $response = $this->actingAs($user)->post(route('campaigns.store'), [
             'name' => 'New Campaign',

@@ -12,7 +12,7 @@ class OrderPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('view orders');
     }
 
     /**
@@ -20,7 +20,7 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        return true;
+        return $user->checkPermissionTo('view orders');
     }
 
     /**
@@ -28,7 +28,7 @@ class OrderPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->checkPermissionTo('create orders');
     }
 
     /**
@@ -36,7 +36,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order): bool
     {
-        return true;
+        return $user->checkPermissionTo('edit orders');
     }
 
     /**
@@ -44,7 +44,7 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete orders');
     }
 
     /**
@@ -52,7 +52,7 @@ class OrderPolicy
      */
     public function restore(User $user, Order $order): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete orders');
     }
 
     /**
@@ -60,6 +60,6 @@ class OrderPolicy
      */
     public function forceDelete(User $user, Order $order): bool
     {
-        return $user->role === 'admin';
+        return $user->checkPermissionTo('delete orders');
     }
 }

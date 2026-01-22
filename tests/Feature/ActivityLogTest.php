@@ -18,29 +18,10 @@ class ActivityLogTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        
-        // Create permissions
-        $permissions = [
-            'view dashboard', 'view leads', 'create leads', 'edit leads', 'delete leads',
-            'view orders', 'create orders', 'edit orders', 'delete orders',
-            'view products', 'create products', 'edit products', 'delete products',
-            'view campaigns', 'create campaigns', 'edit campaigns', 'delete campaigns',
-            'view reports', 'manage users', 'view permissions'
-        ];
-        
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
-
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(Permission::all());
-        
-        Role::create(['name' => 'agent']);
-        Role::create(['name' => 'manager']);
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
     }
 
     public function test_lead_creation_logs_activity()
@@ -122,6 +103,57 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_order_update_logs_activity()
+    {
+        $this->withoutExceptionHandling();
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $this->actingAs($admin);
+
+        $lead = Lead::factory()->create();
+        $order = Order::factory()->create(['lead_id' => $lead->id]);
+        $product = Product::factory()->create();
+
+        $this->put(route('orders.update', $order), [
+            'lead_id' => $lead->id,
+            'order_status' => 'Confirmed',
+            'payment_method' => 'Online',
+            'items' => [
+                [
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'quantity' => 2,
+                    'unit_price' => 150,
+                    'variant' => 'Default',
+                ]
+            ],
+        ]);
+
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'تم تحديث الطلب',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+        ]);
+    }
+
+    public function test_order_deletion_logs_activity()
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $this->actingAs($admin);
+
+        $lead = Lead::factory()->create();
+        $order = Order::factory()->create(['lead_id' => $lead->id]);
+
+        $this->delete(route('orders.destroy', $order));
+
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'تم حذف الطلب',
+            'subject_type' => Order::class,
+            'subject_id' => $order->id,
+        ]);
+    }
+
     public function test_campaign_creation_logs_activity()
     {
         $this->withoutExceptionHandling();
@@ -141,6 +173,23 @@ class ActivityLogTest extends TestCase
             'description' => 'تم إنشاء حملة جديدة',
             'subject_type' => Campaign::class,
             'subject_id' => $campaign->id,
+        ]);
+    }
+
+    public function test_lead_deletion_logs_activity()
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $this->actingAs($admin);
+
+        $lead = Lead::factory()->create();
+
+        $this->delete(route('leads.destroy', $lead));
+
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'تم حذف العميل',
+            'subject_type' => Lead::class,
+            'subject_id' => $lead->id,
         ]);
     }
 
