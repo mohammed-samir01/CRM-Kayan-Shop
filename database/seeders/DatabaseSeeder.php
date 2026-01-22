@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             CampaignSeeder::class,
             LeadSeeder::class,
             OrderSeeder::class,
+            ActivityLogSeeder::class,
         ]);
     }
 }
