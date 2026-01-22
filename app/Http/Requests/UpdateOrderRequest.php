@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateOrderRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'payment_method' => ['required', Rule::in(['Cash', 'Transfer', 'Online', 'COD'])],
+            'order_status' => ['required', Rule::in(['Pending', 'Confirmed', 'Shipped', 'Cancelled'])],
+            'notes' => 'nullable|string',
+            'items' => 'required|array|min:1',
+            'items.*.product_name' => 'required|string|max:255',
+            'items.*.variant' => 'required|string|max:255',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'payment_method' => 'طريقة الدفع',
+            'order_status' => 'حالة الطلب',
+            'notes' => 'ملاحظات',
+            'items' => 'المنتجات',
+            'items.*.product_name' => 'اسم المنتج',
+            'items.*.variant' => 'المتغير',
+            'items.*.quantity' => 'الكمية',
+            'items.*.unit_price' => 'سعر الوحدة',
+        ];
+    }
+}

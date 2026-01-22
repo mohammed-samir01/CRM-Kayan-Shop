@@ -1,0 +1,13 @@
+# Deployment Checklist
+
+- [ ] `.env` file created and configured (APP_ENV=production, APP_DEBUG=false)
+- [ ] Application key generated (`php artisan key:generate`)
+- [ ] Database migrated (`php artisan migrate --force`)
+- [ ] Composer dependencies installed (`composer install --optimize-autoloader --no-dev`)
+- [ ] NPM dependencies installed and assets built (`npm ci && npm run build`)
+- [ ] Storage permissions set (`chmod -R 775 storage bootstrap/cache`)
+- [ ] Caches cleared and warmed (`config:cache`, `route:cache`, `view:cache`)
+- [ ] Queue worker configured and running
+- [ ] Cron job for scheduler added
+- [ ] Health check endpoint (`/health`) returns 200 OK
+- [ ] Mail delivery verified
