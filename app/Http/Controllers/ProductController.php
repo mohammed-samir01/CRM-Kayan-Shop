@@ -7,12 +7,19 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view products')->only(['index', 'show']);
+        $this->middleware('permission:create products')->only(['create', 'store']);
+        $this->middleware('permission:edit products')->only(['edit', 'update']);
+        $this->middleware('permission:delete products')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $this->authorize('viewAny', Product::class);
         $products = Product::latest()->paginate(10);
         return view('products.index', compact('products'));
     }
@@ -22,7 +29,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Product::class);
         return view('products.create');
     }
 
@@ -31,12 +37,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Product::class);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100|unique:products,sku',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => 'in:' . implode(',', Product::AVAILABLE_SIZES),
+            'colors' => 'nullable|array',
+            'colors.*' => 'in:' . implode(',', Product::AVAILABLE_COLORS),
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ], [], [
@@ -44,12 +53,15 @@ class ProductController extends Controller
             'sku' => 'رمز المنتج (SKU)',
             'price' => 'السعر',
             'stock' => 'المخزون',
+            'sizes' => 'المقاسات',
+            'colors' => 'الألوان',
             'description' => 'الوصف',
             'is_active' => 'الحالة',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
-
+        // Ensure arrays are stored (even if null/empty from request, though nullable handles it, good to be explicit if needed, but fillable takes care)
+        
         Product::create($validated);
 
         return redirect()->route('products.index')->with('success', 'تم إضافة المنتج بنجاح');
@@ -60,7 +72,6 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $this->authorize('view', $product);
         return view('products.show', compact('product'));
     }
 
@@ -69,7 +80,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $this->authorize('update', $product);
         return view('products.edit', compact('product'));
     }
 
@@ -78,12 +88,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'nullable|string|max:100|unique:products,sku,' . $product->id,
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => 'in:' . implode(',', Product::AVAILABLE_SIZES),
+            'colors' => 'nullable|array',
+            'colors.*' => 'in:' . implode(',', Product::AVAILABLE_COLORS),
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ], [], [
@@ -91,6 +104,8 @@ class ProductController extends Controller
             'sku' => 'رمز المنتج (SKU)',
             'price' => 'السعر',
             'stock' => 'المخزون',
+            'sizes' => 'المقاسات',
+            'colors' => 'الألوان',
             'description' => 'الوصف',
             'is_active' => 'الحالة',
         ]);
@@ -107,7 +122,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
         $product->delete();
         return redirect()->route('products.index')->with('success', 'تم حذف المنتج بنجاح');
     }

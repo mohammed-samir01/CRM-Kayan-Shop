@@ -136,6 +136,8 @@
                             <tr>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">المنتج</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">المتغير</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">المقاس</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">اللون</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الكمية</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">السعر</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الإجمالي</th>
@@ -145,7 +147,9 @@
                             @foreach($order->items as $item)
                                 <tr class="border-t border-gray-200">
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ $item->product_name }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">{{ $item->variant }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ $item->variant ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ $item->size ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ $item->color ?? '-' }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ $item->quantity }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ number_format($item->unit_price, 2) }} ر.س</td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ number_format($item->line_total, 2) }} ر.س</td>

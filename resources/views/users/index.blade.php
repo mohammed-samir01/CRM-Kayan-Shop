@@ -42,6 +42,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->created_at->format('Y-m-d') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        @can('manage users')
                                         <a href="{{ route('users.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">تعديل</a>
                                         @if($user->id !== auth()->id())
                                             <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline">
@@ -50,6 +51,7 @@
                                                 <button type="submit" onclick="return confirm('هل أنت متأكد؟')" class="text-red-600 hover:text-red-900">حذف</button>
                                             </form>
                                         @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @empty

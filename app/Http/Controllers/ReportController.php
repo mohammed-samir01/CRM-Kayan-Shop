@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view reports');
+    }
+
     public function exportLeads(Request $request)
     {
         $fileName = 'leads_export_' . date('Y-m-d_H-i-s') . '.csv';

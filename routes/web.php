@@ -27,13 +27,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reports/orders', [ReportController::class, 'exportOrders'])->name('reports.orders')->middleware('permission:view reports');
 
     Route::resource('leads', LeadController::class);
+    Route::get('orders/create', [OrderController::class, 'selectLead'])->name('orders.create_selection');
     Route::resource('orders', OrderController::class)->only(['index', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::get('orders/{order}/invoice.pdf', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
-    Route::get('leads/{lead}/orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware('permission:create orders');
+    Route::get('leads/{lead}/orders/create', [OrderController::class, 'create'])->name('orders.create');
 
-    Route::resource('products', App\Http\Controllers\ProductController::class)->middleware('permission:view products');
+    Route::resource('products', App\Http\Controllers\ProductController::class);
 
-    Route::resource('campaigns', CampaignController::class)->middleware('permission:view campaigns');
+    Route::resource('campaigns', CampaignController::class);
 
     Route::group(['middleware' => ['role:admin']], function () {
         Route::resource('users', UserController::class);

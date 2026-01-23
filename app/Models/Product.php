@@ -10,11 +10,16 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const AVAILABLE_SIZES = ['Small', 'Medium', 'Large', 'XL', '2XL', '3XL'];
+    public const AVAILABLE_COLORS = ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'White', 'Gray', 'Purple', 'Orange', 'Pink', 'Brown', 'Beige'];
+
     protected $fillable = [
         'name',
         'sku',
         'price',
         'stock',
+        'sizes',
+        'colors',
         'description',
         'is_active',
     ];
@@ -22,5 +27,7 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
+        'sizes' => 'array',
+        'colors' => 'array',
     ];
 }

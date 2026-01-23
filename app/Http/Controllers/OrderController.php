@@ -19,6 +19,14 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view orders')->only(['index', 'show', 'downloadInvoice']);
+        $this->middleware('permission:create orders')->only(['selectLead', 'create', 'store']);
+        $this->middleware('permission:edit orders')->only(['edit', 'update']);
+        $this->middleware('permission:delete orders')->only(['destroy']);
+    }
+
     public function index(Request $request): View
     {
         $orders = Order::with(['lead', 'items'])
@@ -36,6 +44,17 @@ class OrderController extends Controller
             ->paginate(20);
 
         return view('orders.index', compact('orders'));
+    }
+
+    public function selectLead(Request $request): View
+    {
+        $leads = Lead::when($request->search, function ($q) use ($request) {
+            $q->where('customer_name', 'like', "%{$request->search}%")
+              ->orWhere('phone', 'like', "%{$request->search}%")
+              ->orWhere('lead_code', 'like', "%{$request->search}%");
+        })->latest()->paginate(20);
+
+        return view('orders.select_lead', compact('leads'));
     }
 
     public function create(Lead $lead): View
@@ -63,6 +82,8 @@ class OrderController extends Controller
                         'product_id' => $item['product_id'] ?? null,
                         'product_name' => $product ? $product->name : $item['product_name'],
                         'variant' => $item['variant'] ?? null,
+                        'size' => $item['size'] ?? null,
+                        'color' => $item['color'] ?? null,
                         'quantity' => $item['quantity'],
                         'unit_price' => $item['unit_price'],
                     ]);
@@ -96,7 +117,7 @@ class OrderController extends Controller
 
     public function edit(Order $order): View
     {
-        $order->load('items');
+        $order->load('items.product');
         $products = Product::where('is_active', true)->get();
 
         return view('orders.edit', compact('order', 'products'));
@@ -125,6 +146,8 @@ class OrderController extends Controller
                         'product_id' => $item['product_id'] ?? null,
                         'product_name' => $product ? $product->name : $item['product_name'],
                         'variant' => $item['variant'] ?? null,
+                        'size' => $item['size'] ?? null,
+                        'color' => $item['color'] ?? null,
                         'quantity' => $item['quantity'],
                         'unit_price' => $item['unit_price'],
                     ]);
@@ -149,8 +172,6 @@ class OrderController extends Controller
 
     public function destroy(Order $order): RedirectResponse
     {
-        $this->authorize('delete', $order);
-
         $leadId = $order->lead_id;
         $order->delete();
 
@@ -162,8 +183,6 @@ class OrderController extends Controller
 
     public function downloadInvoice(Order $order)
     {
-        $this->authorize('view', $order);
-        
         $order->load(['lead', 'items']);
         
         $pdf = Pdf::loadView('orders.invoice', compact('order'));

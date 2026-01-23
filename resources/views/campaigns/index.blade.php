@@ -10,9 +10,11 @@
             <div class="bg-white shadow-lg rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-lg font-medium text-gray-900">قائمة الحملات الإعلانية</h3>
+                    @can('create campaigns')
                     <a href="{{ route('campaigns.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md">
                         + إضافة حملة
                     </a>
+                    @endcan
                 </div>
 
                 <div class="overflow-x-auto">
@@ -41,7 +43,9 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $campaign->leads_count }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <a href="{{ route('campaigns.show', $campaign) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>
+                                        @can('edit campaigns')
                                         <a href="{{ route('campaigns.edit', $campaign) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">تعديل</a>
+                                        @endcan
                                         @can('delete', $campaign)
                                             <form action="{{ route('campaigns.destroy', $campaign) }}" method="POST" class="inline">
                                                 @csrf

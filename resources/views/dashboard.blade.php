@@ -7,8 +7,43 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            
+            <!-- Date Filter -->
+            <form method="GET" action="{{ route('dashboard') }}" class="bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 items-end justify-between" id="filterForm">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div>
+                        <label for="date_range" class="block text-sm font-medium text-gray-700">الفترة الزمنية</label>
+                        <select name="date_range" id="date_range" onchange="toggleCustomDates()" class="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="today" {{ $dateRange == 'today' ? 'selected' : '' }}>اليوم</option>
+                            <option value="yesterday" {{ $dateRange == 'yesterday' ? 'selected' : '' }}>أمس</option>
+                            <option value="last_7_days" {{ $dateRange == 'last_7_days' ? 'selected' : '' }}>آخر 7 أيام</option>
+                            <option value="last_30_days" {{ $dateRange == 'last_30_days' ? 'selected' : '' }}>آخر 30 يوم</option>
+                            <option value="last_60_days" {{ $dateRange == 'last_60_days' ? 'selected' : '' }}>آخر 60 يوم</option>
+                            <option value="last_90_days" {{ $dateRange == 'last_90_days' ? 'selected' : '' }}>آخر 90 يوم</option>
+                            <option value="this_month" {{ $dateRange == 'this_month' ? 'selected' : '' }}>هذا الشهر</option>
+                            <option value="last_month" {{ $dateRange == 'last_month' ? 'selected' : '' }}>الشهر الماضي</option>
+                            <option value="this_year" {{ $dateRange == 'this_year' ? 'selected' : '' }}>هذا العام</option>
+                            <option value="custom" {{ $dateRange == 'custom' ? 'selected' : '' }}>تاريخ مخصص</option>
+                        </select>
+                    </div>
+                    
+                    <div id="custom_dates" class="{{ $dateRange == 'custom' ? '' : 'hidden' }} flex gap-4">
+                        <div>
+                            <label for="start_date" class="block text-sm font-medium text-gray-700">من</label>
+                            <input type="date" name="start_date" id="start_date" value="{{ $startDate->format('Y-m-d') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="end_date" class="block text-sm font-medium text-gray-700">إلى</label>
+                            <input type="date" name="end_date" id="end_date" value="{{ $endDate->format('Y-m-d') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded shadow">تطبيق الفلتر</button>
+            </form>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Today's Leads -->
+                <!-- Leads Count -->
                 <div class="bg-white overflow-hidden shadow-lg rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -18,8 +53,8 @@
                                 </svg>
                             </div>
                             <div class="mr-4">
-                                <p class="text-sm font-medium text-gray-500">عملاء اليوم</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ $todayLeads }}</p>
+                                <p class="text-sm font-medium text-gray-500">العملاء</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{ $leadsCount }}</p>
                             </div>
                         </div>
                     </div>
@@ -42,7 +77,7 @@
                     </div>
                 </div>
 
-                <!-- Revenue 7 Days -->
+                <!-- Revenue -->
                 <div class="bg-white overflow-hidden shadow-lg rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -52,14 +87,14 @@
                                 </svg>
                             </div>
                             <div class="mr-4">
-                                <p class="text-sm font-medium text-gray-500">الإيرادات (7 أيام)</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($revenue7Days, 2) }} ر.س</p>
+                                <p class="text-sm font-medium text-gray-500">الإيرادات</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($revenue, 2) }} ر.س</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Revenue 30 Days -->
+                <!-- Orders Count -->
                 <div class="bg-white overflow-hidden shadow-lg rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -69,8 +104,8 @@
                                 </svg>
                             </div>
                             <div class="mr-4">
-                                <p class="text-sm font-medium text-gray-500">الإيرادات (30 يوم)</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($revenue30Days, 2) }} ر.س</p>
+                                <p class="text-sm font-medium text-gray-500">الطلبات</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{ $ordersCount }}</p>
                             </div>
                         </div>
                     </div>
@@ -82,7 +117,7 @@
                 <!-- Sales Chart -->
                 <div class="bg-white shadow-lg rounded-lg col-span-1 lg:col-span-2">
                     <div class="p-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">المبيعات (آخر 30 يوم)</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">المبيعات</h3>
                         <div class="h-72">
                             <canvas id="salesChart"></canvas>
                         </div>
@@ -369,6 +404,21 @@
                     }
                 }
             }
+        });
+
+        function toggleCustomDates() {
+            const range = document.getElementById('date_range').value;
+            const customDates = document.getElementById('custom_dates');
+            if (range === 'custom') {
+                customDates.classList.remove('hidden');
+            } else {
+                customDates.classList.add('hidden');
+            }
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleCustomDates();
         });
     </script>
     @endpush

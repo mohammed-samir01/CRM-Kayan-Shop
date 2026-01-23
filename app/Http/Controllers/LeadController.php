@@ -11,6 +11,14 @@ use Illuminate\View\View;
 
 class LeadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view leads')->only(['index', 'show']);
+        $this->middleware('permission:create leads')->only(['create', 'store']);
+        $this->middleware('permission:edit leads')->only(['edit', 'update']);
+        $this->middleware('permission:delete leads')->only(['destroy']);
+    }
+
     public function index(Request $request): View
     {
         $query = Lead::with(['campaign', 'assignedTo']);
@@ -95,8 +103,6 @@ class LeadController extends Controller
 
     public function destroy(Lead $lead): RedirectResponse
     {
-        $this->authorize('delete', $lead);
-
         $lead->delete();
 
         \App\Services\ActivityLogger::log('تم حذف العميل', $lead);

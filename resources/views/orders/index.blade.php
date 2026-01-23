@@ -42,10 +42,20 @@
             <div class="bg-white shadow-lg rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-lg font-medium text-gray-900">قائمة الطلبات</h3>
-                    <a href="{{ route('reports.orders', request()->query()) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center">
-                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        تصدير CSV
-                    </a>
+                    <div class="flex gap-2">
+                        @can('create orders')
+                            <a href="{{ route('orders.create_selection') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center">
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                إضافة طلب جديد
+                            </a>
+                        @endcan
+                        @can('view reports')
+                        <a href="{{ route('reports.orders', request()->query()) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center">
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            تصدير CSV
+                        </a>
+                        @endcan
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -88,7 +98,9 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>
                                         <a href="{{ route('orders.invoice', $order) }}" class="text-green-600 hover:text-green-900 ml-2">PDF</a>
+                                        @can('edit orders')
                                         <a href="{{ route('orders.edit', $order) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">تعديل</a>
+                                        @endcan
                                         @can('delete', $order)
                                             <form action="{{ route('orders.destroy', $order) }}" method="POST" class="inline">
                                                 @csrf

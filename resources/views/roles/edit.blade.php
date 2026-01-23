@@ -30,7 +30,7 @@
                                             <input id="permission_{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
                                         </div>
                                         <div class="mr-3 text-sm">
-                                            <label for="permission_{{ $permission->id }}" class="font-medium text-gray-700">{{ $permission->name }}</label>
+                                            <label for="permission_{{ $permission->id }}" class="font-medium text-gray-700">{{ __('permissions.' . $permission->name) }}</label>
                                         </div>
                                     </div>
                                 @endforeach

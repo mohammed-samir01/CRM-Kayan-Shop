@@ -40,6 +40,34 @@
                             <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                         </div>
 
+                        <!-- Sizes -->
+                        <div>
+                            <x-input-label :value="__('المقاسات المتوفرة')" class="mb-2" />
+                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                                @foreach(\App\Models\Product::AVAILABLE_SIZES as $size)
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="sizes[]" value="{{ $size }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array($size, old('sizes', [])) ? 'checked' : '' }}>
+                                        <span class="ms-2 text-sm text-gray-600">{{ $size }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            <x-input-error :messages="$errors->get('sizes')" class="mt-2" />
+                        </div>
+
+                        <!-- Colors -->
+                        <div>
+                            <x-input-label :value="__('الألوان المتوفرة')" class="mb-2" />
+                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                                @foreach(\App\Models\Product::AVAILABLE_COLORS as $color)
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" name="colors[]" value="{{ $color }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array($color, old('colors', [])) ? 'checked' : '' }}>
+                                        <span class="ms-2 text-sm text-gray-600">{{ $color }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            <x-input-error :messages="$errors->get('colors')" class="mt-2" />
+                        </div>
+
                         <!-- Description -->
                         <div>
                             <x-input-label for="description" :value="__('الوصف')" />

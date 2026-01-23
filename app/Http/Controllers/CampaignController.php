@@ -10,6 +10,14 @@ use Illuminate\View\View;
 
 class CampaignController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view campaigns')->only(['index', 'show']);
+        $this->middleware('permission:create campaigns')->only(['create', 'store']);
+        $this->middleware('permission:edit campaigns')->only(['edit', 'update']);
+        $this->middleware('permission:delete campaigns')->only(['destroy']);
+    }
+
     public function index(): View
     {
         $campaigns = Campaign::withCount('leads')->latest()->paginate(20);
@@ -57,8 +65,6 @@ class CampaignController extends Controller
 
     public function destroy(Campaign $campaign): RedirectResponse
     {
-        $this->authorize('delete', $campaign);
-
         $campaign->delete();
         
         \App\Services\ActivityLogger::log('تم حذف الحملة', $campaign);

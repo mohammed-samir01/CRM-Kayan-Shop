@@ -172,7 +172,9 @@
                 <th>{{ fix_arabic('الإجمالي') }}</th>
                 <th>{{ fix_arabic('سعر الوحدة') }}</th>
                 <th>{{ fix_arabic('الكمية') }}</th>
-                <th>{{ fix_arabic('المقاس/النوع') }}</th>
+                <th>{{ fix_arabic('اللون') }}</th>
+                <th>{{ fix_arabic('المقاس') }}</th>
+                <th>{{ fix_arabic('المتغير') }}</th>
                 <th>{{ fix_arabic('المنتج') }}</th>
             </tr>
         </thead>
@@ -182,6 +184,8 @@
                 <td>{{ number_format($item->line_total, 2) }}</td>
                 <td>{{ number_format($item->unit_price, 2) }}</td>
                 <td>{{ $item->quantity }}</td>
+                <td>{{ fix_arabic($item->color ?? '-') }}</td>
+                <td>{{ fix_arabic($item->size ?? '-') }}</td>
                 <td>{{ fix_arabic($item->variant ?? '-') }}</td>
                 <td>{{ fix_arabic($item->product_name) }}</td>
             </tr>

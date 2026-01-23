@@ -20,7 +20,9 @@ class UpdateOrderRequest extends FormRequest
             'notes' => 'nullable|string',
             'items' => 'required|array|min:1',
             'items.*.product_name' => 'required|string|max:255',
-            'items.*.variant' => 'required|string|max:255',
+            'items.*.variant' => 'nullable|string|max:255',
+            'items.*.size' => 'nullable|string|max:255',
+            'items.*.color' => 'nullable|string|max:255',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
         ];
@@ -35,6 +37,8 @@ class UpdateOrderRequest extends FormRequest
             'items' => 'المنتجات',
             'items.*.product_name' => 'اسم المنتج',
             'items.*.variant' => 'المتغير',
+            'items.*.size' => 'المقاس',
+            'items.*.color' => 'اللون',
             'items.*.quantity' => 'الكمية',
             'items.*.unit_price' => 'سعر الوحدة',
         ];
