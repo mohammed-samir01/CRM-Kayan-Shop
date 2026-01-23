@@ -17,7 +17,7 @@
         @auth
             <!-- Sidebar -->
             <aside 
-                class="w-64 bg-indigo-900 text-white min-h-screen flex flex-col shadow-xl fixed inset-y-0 right-0 z-30 transform transition-transform duration-300 lg:static lg:inset-auto translate-x-full lg:translate-x-0" 
+                class="w-64 bg-indigo-900 text-white min-h-screen flex flex-col shadow-xl fixed inset-y-0 right-0 z-30 transition-transform duration-300 lg:static lg:inset-auto" 
                 :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
                 id="sidebar">
                 <div class="p-6 border-b border-indigo-800 flex items-center justify-between lg:justify-center">
