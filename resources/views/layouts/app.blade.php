@@ -13,17 +13,24 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
 <body class="bg-gray-50 font-sans antialiased">
-    <div class="min-h-screen flex">
+    <div x-data="{ sidebarOpen: false }" class="min-h-screen flex relative">
         @auth
             <!-- Sidebar -->
-            <aside class="w-64 bg-indigo-900 text-white min-h-screen flex flex-col shadow-xl fixed lg:relative z-30 transition-transform duration-300" id="sidebar">
-                <div class="p-6 border-b border-indigo-800 flex items-center justify-center">
+            <aside 
+                class="w-64 bg-indigo-900 text-white min-h-screen flex flex-col shadow-xl fixed inset-y-0 right-0 z-30 transform transition-transform duration-300 lg:static lg:inset-auto translate-x-full lg:translate-x-0" 
+                :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
+                id="sidebar">
+                <div class="p-6 border-b border-indigo-800 flex items-center justify-between lg:justify-center">
                     <a href="{{ route('dashboard') }}" class="text-2xl font-bold tracking-wider">
                         CRM
                     </a>
+                    <!-- Mobile Close Button -->
+                    <button @click="sidebarOpen = false" class="lg:hidden text-indigo-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
                 </div>
                 
-                <nav class="flex-1 py-6 space-y-2 px-3">
+                <nav class="flex-1 py-6 space-y-2 px-3 overflow-y-auto">
                     @can('view dashboard')
                     <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('dashboard') ? 'bg-indigo-800 text-white shadow-sm' : 'text-indigo-100 hover:bg-indigo-800 hover:text-white' }}">
                         <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
@@ -97,6 +104,20 @@
                     </div>
                 </div>
             </aside>
+            
+            <!-- Mobile Sidebar Overlay -->
+            <div 
+                x-show="sidebarOpen" 
+                @click="sidebarOpen = false" 
+                x-transition:enter="transition-opacity ease-linear duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity ease-linear duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden"
+                style="display: none;">
+            </div>
         @endauth
 
         <!-- Main Content -->
@@ -104,7 +125,15 @@
             @if(isset($header))
                 <header class="bg-white shadow-sm z-10 sticky top-0">
                     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                        <div>
+                        <div class="flex items-center">
+                            @auth
+                                <!-- Mobile Hamburger -->
+                                <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden ml-4 text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-md hover:bg-gray-100">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                            @endauth
                             {{ $header }}
                         </div>
                         
