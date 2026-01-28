@@ -45,6 +45,8 @@ class AuthenticatedSessionController extends Controller
             } elseif ($user->can('view permissions')) {
                 $redirectTo = route('roles.index', absolute: false);
             }
+            
+            return redirect($redirectTo);
         }
 
         return redirect()->intended($redirectTo);
