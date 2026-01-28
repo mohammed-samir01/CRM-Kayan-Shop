@@ -19,6 +19,10 @@ class Campaign extends Model
         'notes',
     ];
 
+    protected $casts = [
+        'platform' => 'array',
+    ];
+
     public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);

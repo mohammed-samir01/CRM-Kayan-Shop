@@ -15,7 +15,7 @@
                             <div class="mt-4 space-y-3">
                                 <div class="flex">
                                     <span class="text-gray-500 w-32">المنصة:</span>
-                                    <span class="font-medium text-gray-900">{{ $campaign->platform }}</span>
+                                    <span class="font-medium text-gray-900">{{ is_array($campaign->platform) ? implode(', ', $campaign->platform) : $campaign->platform }}</span>
                                 </div>
                                 <div class="flex">
                                     <span class="text-gray-500 w-32">نوع الإعلان:</span>

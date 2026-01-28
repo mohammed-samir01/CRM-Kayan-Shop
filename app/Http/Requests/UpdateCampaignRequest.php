@@ -16,7 +16,8 @@ class UpdateCampaignRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('campaigns')->ignore($this->route('campaign'))],
-            'platform' => ['required', Rule::in(['TikTok', 'Facebook', 'Instagram', 'Google', 'Snapchat', 'X', 'YouTube', 'LinkedIn', 'Other'])],
+            'platform' => ['required', 'array'],
+            'platform.*' => ['string', Rule::in(['TikTok', 'Facebook', 'Instagram', 'Google', 'Snapchat', 'X', 'YouTube', 'LinkedIn', 'Other'])],
             'ad_type' => ['required', Rule::in(['Video', 'Image', 'Carousel', 'Search', 'Story', 'Other'])],
             'source' => ['required', Rule::in(['Form', 'WhatsApp', 'Phone Call', 'Website', 'DM', 'Other'])],
             'notes' => 'nullable|string',

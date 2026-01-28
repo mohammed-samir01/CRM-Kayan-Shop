@@ -25,17 +25,18 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">المنصة <span class="text-red-500">*</span></label>
-                                <select name="platform" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="TikTok" {{ old('platform', $campaign->platform) == 'TikTok' ? 'selected' : '' }}>TikTok</option>
-                                    <option value="Facebook" {{ old('platform', $campaign->platform) == 'Facebook' ? 'selected' : '' }}>Facebook</option>
-                                    <option value="Instagram" {{ old('platform', $campaign->platform) == 'Instagram' ? 'selected' : '' }}>Instagram</option>
-                                    <option value="Google" {{ old('platform', $campaign->platform) == 'Google' ? 'selected' : '' }}>Google</option>
-                                    <option value="Snapchat" {{ old('platform', $campaign->platform) == 'Snapchat' ? 'selected' : '' }}>Snapchat</option>
-                                    <option value="X" {{ old('platform', $campaign->platform) == 'X' ? 'selected' : '' }}>X</option>
-                                    <option value="YouTube" {{ old('platform', $campaign->platform) == 'YouTube' ? 'selected' : '' }}>YouTube</option>
-                                    <option value="LinkedIn" {{ old('platform', $campaign->platform) == 'LinkedIn' ? 'selected' : '' }}>LinkedIn</option>
-                                    <option value="Other" {{ old('platform', $campaign->platform) == 'Other' ? 'selected' : '' }}>أخرى</option>
+                                <select name="platform[]" required multiple class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-32">
+                                    <option value="TikTok" {{ in_array('TikTok', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>TikTok</option>
+                                    <option value="Facebook" {{ in_array('Facebook', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>Facebook</option>
+                                    <option value="Instagram" {{ in_array('Instagram', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>Instagram</option>
+                                    <option value="Google" {{ in_array('Google', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>Google</option>
+                                    <option value="Snapchat" {{ in_array('Snapchat', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>Snapchat</option>
+                                    <option value="X" {{ in_array('X', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>X</option>
+                                    <option value="YouTube" {{ in_array('YouTube', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>YouTube</option>
+                                    <option value="LinkedIn" {{ in_array('LinkedIn', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>LinkedIn</option>
+                                    <option value="Other" {{ in_array('Other', old('platform', $campaign->platform ?? [])) ? 'selected' : '' }}>أخرى</option>
                                 </select>
+                                <p class="text-xs text-gray-500 mt-1">يمكنك اختيار أكثر من منصة بالضغط على Ctrl (أو Cmd) أثناء الاختيار</p>
                                 @error('platform')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror

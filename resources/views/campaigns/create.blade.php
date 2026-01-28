@@ -24,17 +24,18 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">المنصة <span class="text-red-500">*</span></label>
-                                <select name="platform" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <option value="TikTok" {{ old('platform') == 'TikTok' ? 'selected' : '' }}>TikTok</option>
-                                    <option value="Facebook" {{ old('platform') == 'Facebook' ? 'selected' : '' }}>Facebook</option>
-                                    <option value="Instagram" {{ old('platform') == 'Instagram' ? 'selected' : '' }}>Instagram</option>
-                                    <option value="Google" {{ old('platform') == 'Google' ? 'selected' : '' }}>Google</option>
-                                    <option value="Snapchat" {{ old('platform') == 'Snapchat' ? 'selected' : '' }}>Snapchat</option>
-                                    <option value="X" {{ old('platform') == 'X' ? 'selected' : '' }}>X</option>
-                                    <option value="YouTube" {{ old('platform') == 'YouTube' ? 'selected' : '' }}>YouTube</option>
-                                    <option value="LinkedIn" {{ old('platform') == 'LinkedIn' ? 'selected' : '' }}>LinkedIn</option>
-                                    <option value="Other" {{ old('platform') == 'Other' ? 'selected' : '' }}>أخرى</option>
+                                <select name="platform[]" required multiple class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 h-32">
+                                    <option value="TikTok" {{ in_array('TikTok', old('platform', [])) ? 'selected' : '' }}>TikTok</option>
+                                    <option value="Facebook" {{ in_array('Facebook', old('platform', [])) ? 'selected' : '' }}>Facebook</option>
+                                    <option value="Instagram" {{ in_array('Instagram', old('platform', [])) ? 'selected' : '' }}>Instagram</option>
+                                    <option value="Google" {{ in_array('Google', old('platform', [])) ? 'selected' : '' }}>Google</option>
+                                    <option value="Snapchat" {{ in_array('Snapchat', old('platform', [])) ? 'selected' : '' }}>Snapchat</option>
+                                    <option value="X" {{ in_array('X', old('platform', [])) ? 'selected' : '' }}>X</option>
+                                    <option value="YouTube" {{ in_array('YouTube', old('platform', [])) ? 'selected' : '' }}>YouTube</option>
+                                    <option value="LinkedIn" {{ in_array('LinkedIn', old('platform', [])) ? 'selected' : '' }}>LinkedIn</option>
+                                    <option value="Other" {{ in_array('Other', old('platform', [])) ? 'selected' : '' }}>أخرى</option>
                                 </select>
+                                <p class="text-xs text-gray-500 mt-1">يمكنك اختيار أكثر من منصة بالضغط على Ctrl (أو Cmd) أثناء الاختيار</p>
                                 @error('platform')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
