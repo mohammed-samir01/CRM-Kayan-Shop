@@ -170,7 +170,13 @@
                             @foreach($topPlatforms as $platform)
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm font-medium text-gray-700">
-                                        {{ __('campaigns.platform.' . $platform->platform) }}
+                                        @if(is_array($platform->platform))
+                                            @foreach($platform->platform as $p)
+                                                {{ __('campaigns.platform.' . $p) }}@if(!$loop->last), @endif
+                                            @endforeach
+                                        @else
+                                            {{ __('campaigns.platform.' . $platform->platform) }}
+                                        @endif
                                     </span>
                                     <span class="text-sm font-bold text-gray-900">{{ $platform->count }}</span>
                                 </div>
