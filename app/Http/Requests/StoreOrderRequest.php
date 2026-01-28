@@ -15,7 +15,13 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lead_id' => 'required|exists:leads,id',
+            'customer_type' => 'nullable|in:existing,new',
+            'lead_id' => 'required_if:customer_type,existing|nullable|exists:leads,id',
+            'customer_name' => 'required_if:customer_type,new|nullable|string|max:255',
+            'phone' => 'required_if:customer_type,new|nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'city' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:500',
             'payment_method' => ['required', Rule::in(['Cash', 'Transfer', 'Online', 'COD'])],
             'order_status' => ['required', Rule::in(['Pending', 'Confirmed', 'Shipped', 'Cancelled'])],
             'notes' => 'nullable|string',
@@ -33,7 +39,10 @@ class StoreOrderRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'customer_type' => 'نوع العميل',
             'lead_id' => 'العميل',
+            'customer_name' => 'اسم العميل',
+            'phone' => 'رقم الهاتف',
             'payment_method' => 'طريقة الدفع',
             'order_status' => 'حالة الطلب',
             'notes' => 'ملاحظات',

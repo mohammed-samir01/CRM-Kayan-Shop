@@ -1,7 +1,30 @@
 <x-app-layout>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: 42px;
+            border-color: #d1d5db;
+            border-radius: 0.375rem;
+            padding-top: 5px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+        }
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border-color: #d1d5db;
+            border-radius: 0.375rem;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 30px;
+        }
+    </style>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('إضافة طلب جديد للعميل') }}: {{ $lead->name }}
+            @if($lead)
+                {{ __('إضافة طلب جديد للعميل') }}: {{ $lead->customer_name }}
+            @else
+                {{ __('إضافة طلب جديد') }}
+            @endif
         </h2>
     </x-slot>
 
@@ -11,7 +34,90 @@
                 <div class="p-6 text-gray-900">
                     <form action="{{ route('orders.store') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="lead_id" value="{{ $lead->id }}">
+
+                        <!-- Customer Section -->
+                        <div class="mb-8 border-b border-gray-200 pb-8">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('بيانات العميل') }}</h3>
+                            
+                            @if($lead)
+                                <input type="hidden" name="customer_type" value="existing">
+                                <input type="hidden" name="lead_id" value="{{ $lead->id }}">
+                                <div class="bg-blue-50 p-4 rounded-md flex items-center gap-4 border border-blue-100">
+                                    <div class="bg-blue-100 p-2 rounded-full">
+                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900">{{ $lead->customer_name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $lead->phone }}</div>
+                                    </div>
+                                    <a href="{{ route('orders.create_any') }}" class="mr-auto text-sm text-indigo-600 hover:text-indigo-900">
+                                        {{ __('تغيير العميل') }}
+                                    </a>
+                                </div>
+                            @else
+                                <div class="flex space-x-4 space-x-reverse mb-6">
+                                    <button type="button" onclick="setCustomerType('existing')" id="btn-existing" 
+                                        class="px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ old('customer_type', 'existing') == 'existing' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                                        {{ __('اختيار عميل حالي') }}
+                                    </button>
+                                    <button type="button" onclick="setCustomerType('new')" id="btn-new" 
+                                        class="px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ old('customer_type') == 'new' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                                        {{ __('إضافة عميل جديد') }}
+                                    </button>
+                                </div>
+                                
+                                <input type="hidden" name="customer_type" id="customer_type" value="{{ old('customer_type', 'existing') }}">
+                                
+                                <!-- Existing Customer Selection -->
+                                <div id="section-existing" class="{{ old('customer_type', 'existing') == 'existing' ? '' : 'hidden' }}">
+                                    <div class="max-w-xl">
+                                        <x-input-label for="lead_id" :value="__('ابحث عن العميل')" />
+                                        <select id="lead_id" name="lead_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="">{{ __('اختر عميلاً') }}</option>
+                                            @if(isset($leads))
+                                                @foreach($leads as $l)
+                                                    <option value="{{ $l->id }}" {{ old('lead_id') == $l->id ? 'selected' : '' }}>
+                                                        {{ $l->customer_name }} - {{ $l->phone }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <x-input-error class="mt-2" :messages="$errors->get('lead_id')" />
+                                    </div>
+                                </div>
+
+                                <!-- New Customer Fields -->
+                                <div id="section-new" class="{{ old('customer_type') == 'new' ? '' : 'hidden' }}">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <x-input-label for="customer_name" :value="__('اسم العميل')" />
+                                            <x-text-input id="customer_name" class="block mt-1 w-full" type="text" name="customer_name" :value="old('customer_name')" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('customer_name')" />
+                                        </div>
+                                        <div>
+                                            <x-input-label for="phone" :value="__('رقم الهاتف')" />
+                                            <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                                        </div>
+                                        <div>
+                                            <x-input-label for="email" :value="__('البريد الإلكتروني (اختياري)')" />
+                                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                                        </div>
+                                        <div>
+                                            <x-input-label for="city" :value="__('المدينة (اختياري)')" />
+                                            <x-text-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city')" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('city')" />
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <x-input-label for="address" :value="__('العنوان (اختياري)')" />
+                                            <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
 
                         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <!-- Payment Method -->
@@ -49,7 +155,7 @@
                         </div>
 
                         <!-- Order Items -->
-                        <div class="mt-8">
+                        <div class="mt-8 border-t border-gray-200 pt-8">
                             <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('المنتجات') }}</h3>
                             
                             <div id="items-container">
@@ -114,8 +220,12 @@
                             </button>
                         </div>
 
-                        <div class="flex items-center justify-end mt-6">
-                            <a href="{{ route('leads.show', $lead->id) }}" class="text-gray-600 hover:text-gray-900 ml-4">{{ __('إلغاء') }}</a>
+                        <div class="flex items-center justify-end mt-6 border-t border-gray-200 pt-6">
+                            @if($lead)
+                                <a href="{{ route('leads.show', $lead->id) }}" class="text-gray-600 hover:text-gray-900 ml-4">{{ __('إلغاء') }}</a>
+                            @else
+                                <a href="{{ route('orders.index') }}" class="text-gray-600 hover:text-gray-900 ml-4">{{ __('إلغاء') }}</a>
+                            @endif
                             <x-primary-button>
                                 {{ __('حفظ الطلب') }}
                             </x-primary-button>
@@ -127,7 +237,53 @@
     </div>
 
     @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        $(document).ready(function() {
+            $('#lead_id').select2({
+                placeholder: "{{ __('اختر عميلاً') }}",
+                allowClear: true,
+                width: '100%',
+                dir: "rtl",
+                language: {
+                    noResults: function() {
+                        return "لا توجد نتائج";
+                    }
+                }
+            });
+        });
+
+        // Customer Type Toggle
+        function setCustomerType(type) {
+            document.getElementById('customer_type').value = type;
+            
+            const btnExisting = document.getElementById('btn-existing');
+            const btnNew = document.getElementById('btn-new');
+            const sectionExisting = document.getElementById('section-existing');
+            const sectionNew = document.getElementById('section-new');
+            
+            if (type === 'existing') {
+                btnExisting.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+                btnExisting.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                
+                btnNew.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+                btnNew.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                
+                sectionExisting.classList.remove('hidden');
+                sectionNew.classList.add('hidden');
+            } else {
+                btnNew.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+                btnNew.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                
+                btnExisting.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+                btnExisting.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+                
+                sectionNew.classList.remove('hidden');
+                sectionExisting.classList.add('hidden');
+            }
+        }
+
         let rowCount = 1;
 
         function addRow() {

@@ -57,18 +57,36 @@ class OrderController extends Controller
         return view('orders.select_lead', compact('leads'));
     }
 
-    public function create(Lead $lead): View
+    public function create(Lead $lead = null): View
     {
         $products = Product::where('is_active', true)->get();
-        return view('orders.create', compact('lead', 'products'));
+        $leads = $lead ? null : Lead::latest()->limit(50)->get();
+        return view('orders.create', compact('lead', 'products', 'leads'));
     }
 
     public function store(StoreOrderRequest $request): RedirectResponse
     {
         try {
             DB::transaction(function () use ($request, &$order) {
+                $leadId = $request->lead_id;
+
+                if ($request->customer_type === 'new') {
+                    $lead = Lead::create([
+                        'customer_name' => $request->customer_name,
+                        'phone' => $request->phone,
+                        'email' => $request->email,
+                        'city' => $request->city,
+                        'address' => $request->address,
+                        'status' => 'New',
+                        'assigned_to' => auth()->id(),
+                    ]);
+                    $leadId = $lead->id;
+
+                    \App\Services\ActivityLogger::log('تم إنشاء عميل جديد مع الطلب', $lead);
+                }
+
                 $order = Order::create([
-                    'lead_id' => $request->lead_id,
+                    'lead_id' => $leadId,
                     'payment_method' => $request->payment_method,
                     'order_status' => $request->order_status,
                     'notes' => $request->notes,

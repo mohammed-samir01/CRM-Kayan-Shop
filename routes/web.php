@@ -27,7 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reports/orders', [ReportController::class, 'exportOrders'])->name('reports.orders')->middleware('permission:view reports');
 
     Route::resource('leads', LeadController::class);
-    Route::get('orders/create', [OrderController::class, 'selectLead'])->name('orders.create_selection');
+    // Route::get('orders/create', [OrderController::class, 'selectLead'])->name('orders.create_selection');
+    Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create_any');
     Route::resource('orders', OrderController::class)->only(['index', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::get('orders/{order}/invoice.pdf', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
     Route::get('leads/{lead}/orders/create', [OrderController::class, 'create'])->name('orders.create');
