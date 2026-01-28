@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public const AVAILABLE_SIZES = ['Small', 'Medium', 'Large', 'XL', '2XL', '3XL'];
+    public const AVAILABLE_SIZES = ['Small', 'Medium', 'Large', 'XL', '2XL', '3XL', 'Oversize', 'One Size'];
     public const AVAILABLE_COLORS = ['Red', 'Blue', 'Green', 'Yellow', 'Black', 'White', 'Gray', 'Purple', 'Orange', 'Pink', 'Brown', 'Beige'];
 
     protected $fillable = [

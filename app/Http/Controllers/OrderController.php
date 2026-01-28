@@ -74,8 +74,12 @@ class OrderController extends Controller
                     'notes' => $request->notes,
                 ]);
 
+                $totalValue = 0;
+
                 foreach ($request->items as $item) {
                     $product = isset($item['product_id']) ? Product::find($item['product_id']) : null;
+                    $itemTotal = $item['quantity'] * $item['unit_price'];
+                    $totalValue += $itemTotal;
 
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -88,6 +92,8 @@ class OrderController extends Controller
                         'unit_price' => $item['unit_price'],
                     ]);
                 }
+
+                $order->update(['total_value' => $totalValue]);
 
                 if ($order->order_status === 'Confirmed') {
                     $admins = User::role('admin')->get();
@@ -138,8 +144,12 @@ class OrderController extends Controller
                 // TODO: Refactor to sync items instead of delete-all to preserve history/IDs
                 $order->items()->delete();
 
+                $totalValue = 0;
+
                 foreach ($request->items as $item) {
                     $product = isset($item['product_id']) ? Product::find($item['product_id']) : null;
+                    $itemTotal = $item['quantity'] * $item['unit_price'];
+                    $totalValue += $itemTotal;
 
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -152,6 +162,8 @@ class OrderController extends Controller
                         'unit_price' => $item['unit_price'],
                     ]);
                 }
+
+                $order->update(['total_value' => $totalValue]);
 
                 if ($originalStatus !== 'Confirmed' && $request->order_status === 'Confirmed') {
                     $admins = User::role('admin')->get();
