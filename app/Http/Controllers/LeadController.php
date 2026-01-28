@@ -81,7 +81,7 @@ class LeadController extends Controller
     public function show(Lead $lead): View
     {
         $lead->load(['campaign', 'assignedTo', 'orders.items']);
-        $activities = $lead->activities()->with('causer')->paginate(10);
+        $activities = $lead->activities()->with('causer')->latest()->paginate(10);
 
         return view('leads.show', compact('lead', 'activities'));
     }

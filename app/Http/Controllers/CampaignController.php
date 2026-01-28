@@ -43,7 +43,7 @@ class CampaignController extends Controller
     public function show(Campaign $campaign): View
     {
         $campaign->load('leads');
-        $activities = $campaign->activities()->with('causer')->paginate(10);
+        $activities = $campaign->activities()->with('causer')->latest()->paginate(10);
 
         return view('campaigns.show', compact('campaign', 'activities'));
     }
