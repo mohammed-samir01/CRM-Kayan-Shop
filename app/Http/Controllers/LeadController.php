@@ -50,7 +50,7 @@ class LeadController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        $leads = $query->latest()->paginate(20);
+        $leads = $query->orderBy('id', 'desc')->paginate(20);
 
         return view('leads.index', compact('leads'));
     }
@@ -81,7 +81,7 @@ class LeadController extends Controller
     public function show(Lead $lead): View
     {
         $lead->load(['campaign', 'assignedTo', 'orders.items']);
-        $activities = $lead->activities()->with('causer')->latest()->paginate(10);
+        $activities = $lead->activities()->with('causer')->orderBy('id', 'desc')->paginate(10);
 
         return view('leads.show', compact('lead', 'activities'));
     }

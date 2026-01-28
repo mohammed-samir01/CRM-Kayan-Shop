@@ -101,7 +101,7 @@ class DashboardController extends Controller
         // Let's filter recent leads too to match the context.
         $recentLeads = Lead::with(['campaign', 'assignedTo'])
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->latest()
+            ->orderBy('id', 'desc')
             ->take(10)
             ->get();
 

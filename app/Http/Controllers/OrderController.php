@@ -40,7 +40,7 @@ class OrderController extends Controller
                         });
                 });
             })
-            ->latest()
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return view('orders.index', compact('orders'));
@@ -52,7 +52,7 @@ class OrderController extends Controller
             $q->where('customer_name', 'like', "%{$request->search}%")
               ->orWhere('phone', 'like', "%{$request->search}%")
               ->orWhere('lead_code', 'like', "%{$request->search}%");
-        })->latest()->paginate(20);
+        })->orderBy('id', 'desc')->paginate(20);
 
         return view('orders.select_lead', compact('leads'));
     }
@@ -60,7 +60,7 @@ class OrderController extends Controller
     public function create(Lead $lead = null): View
     {
         $products = Product::where('is_active', true)->get();
-        $leads = $lead ? null : Lead::latest()->limit(50)->get();
+        $leads = $lead ? null : Lead::orderBy('id', 'desc')->limit(50)->get();
         return view('orders.create', compact('lead', 'products', 'leads'));
     }
 
