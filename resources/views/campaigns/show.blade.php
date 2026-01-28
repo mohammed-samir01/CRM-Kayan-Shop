@@ -106,7 +106,7 @@
                                                 'Cancelled' => 'ملغي',
                                             } }}
                                         </span>
-                                        <span class="text-sm text-gray-600">{{ number_format($lead->expected_value, 2) }} ر.س</span>
+                                        <span class="text-sm text-gray-600">{{ number_format($lead->expected_value, 2) }} ج.م</span>
                                     </div>
                                 </div>
                                 <span class="text-sm text-gray-500">{{ $lead->created_at->format('Y-m-d') }}</span>

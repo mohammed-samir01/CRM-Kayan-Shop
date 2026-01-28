@@ -53,7 +53,7 @@
                                             {{ $product->sku ?? '-' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
-                                            {{ number_format($product->price, 2) }} ر.س
+                                            {{ number_format($product->price, 2) }} ج.م
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $product->stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

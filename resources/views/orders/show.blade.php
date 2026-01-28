@@ -151,15 +151,15 @@
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ $item->size ?? '-' }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ $item->color ?? '-' }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-900">{{ $item->quantity }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-900">{{ number_format($item->unit_price, 2) }} ر.س</td>
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ number_format($item->line_total, 2) }} ر.س</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">{{ number_format($item->unit_price, 2) }} ج.م</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ number_format($item->line_total, 2) }} ج.م</td>
                                 </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr class="bg-gray-50">
                                 <td colspan="4" class="px-6 py-4 text-left text-sm font-medium text-gray-700">إجمالي الطلب:</td>
-                                <td class="px-6 py-4 text-left text-xl font-bold text-green-600">{{ number_format($order->total_value, 2) }} ر.س</td>
+                                <td class="px-6 py-4 text-left text-xl font-bold text-green-600">{{ number_format($order->total_value, 2) }} ج.م</td>
                             </tr>
                         </tfoot>
                     </table>

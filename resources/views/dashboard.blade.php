@@ -88,7 +88,7 @@
                             </div>
                             <div class="mr-4">
                                 <p class="text-sm font-medium text-gray-500">الإيرادات</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($revenue, 2) }} ر.س</p>
+                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($revenue, 2) }} ج.م</p>
                             </div>
                         </div>
                     </div>

@@ -74,7 +74,7 @@
                                                     data-name="{{ $product->name }}"
                                                     data-sizes="{{ json_encode($product->sizes ?? []) }}"
                                                     data-colors="{{ json_encode($product->colors ?? []) }}">
-                                                    {{ $product->name }} ({{ number_format($product->price, 2) }} ر.س)
+                                                    {{ $product->name }} ({{ number_format($product->price, 2) }} ج.م)
                                                 </option>
                                             @endforeach
                                         </select>
@@ -157,7 +157,7 @@
                                     data-name="{{ $product->name }}"
                                     data-sizes="{{ json_encode($product->sizes ?? []) }}"
                                     data-colors="{{ json_encode($product->colors ?? []) }}">
-                                    {{ $product->name }} ({{ number_format($product->price, 2) }} ر.س)
+                                    {{ $product->name }} ({{ number_format($product->price, 2) }} ج.م)
                                 </option>
                             @endforeach
                         </select>

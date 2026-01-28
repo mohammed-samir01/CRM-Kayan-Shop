@@ -52,7 +52,7 @@
                             </div>
                             <div class="flex">
                                 <span class="text-gray-500 w-32">القيمة المتوقعة:</span>
-                                <span class="font-medium text-green-600">{{ number_format($lead->expected_value, 2) }} ر.س</span>
+                                <span class="font-medium text-green-600">{{ number_format($lead->expected_value, 2) }} ج.م</span>
                             </div>
                             <div class="flex">
                                 <span class="text-gray-500 w-32">تاريخ المتابعة:</span>
@@ -207,15 +207,15 @@
                                             <td class="px-3 py-2 text-sm text-gray-900">{{ $item->product_name }}</td>
                                             <td class="px-3 py-2 text-sm text-gray-900">{{ $item->variant }}</td>
                                             <td class="px-3 py-2 text-sm text-gray-900">{{ $item->quantity }}</td>
-                                            <td class="px-3 py-2 text-sm text-gray-900">{{ number_format($item->unit_price, 2) }} ر.س</td>
-                                            <td class="px-3 py-2 text-sm font-medium text-gray-900">{{ number_format($item->line_total, 2) }} ر.س</td>
+                                            <td class="px-3 py-2 text-sm text-gray-900">{{ number_format($item->unit_price, 2) }} ج.م</td>
+                                            <td class="px-3 py-2 text-sm font-medium text-gray-900">{{ number_format($item->line_total, 2) }} ج.م</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr class="bg-gray-50">
                                         <td colspan="4" class="px-3 py-2 text-left text-sm font-medium text-gray-700">إجمالي الطلب:</td>
-                                        <td class="px-3 py-2 text-left text-lg font-bold text-green-600">{{ number_format($order->total_value, 2) }} ر.س</td>
+                                        <td class="px-3 py-2 text-left text-lg font-bold text-green-600">{{ number_format($order->total_value, 2) }} ج.م</td>
                                     </tr>
                                 </tfoot>
                             </table>

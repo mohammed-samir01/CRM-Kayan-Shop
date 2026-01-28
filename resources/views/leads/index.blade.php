@@ -113,7 +113,7 @@
                                             {{ __('leads.status.' . $lead->status) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($lead->expected_value, 2) }} ر.س</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($lead->expected_value, 2) }} ج.م</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $lead->follow_up_date?->format('Y-m-d') ?? '-' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <a href="{{ route('leads.show', $lead) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>

@@ -21,7 +21,7 @@
                         </div>
                         <div class="flex">
                             <span class="text-gray-500 w-32">السعر:</span>
-                            <span class="font-medium text-green-600">{{ number_format($product->price, 2) }} ر.س</span>
+                            <span class="font-medium text-green-600">{{ number_format($product->price, 2) }} ج.م</span>
                         </div>
                         <div class="flex">
                             <span class="text-gray-500 w-32">المخزون:</span>

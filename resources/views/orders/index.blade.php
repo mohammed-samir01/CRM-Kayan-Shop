@@ -94,7 +94,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ __('orders.payment_method.' . $order->payment_method) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ number_format($order->total_value, 2) }} ر.س</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ number_format($order->total_value, 2) }} ج.م</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">عرض</a>
                                         <a href="{{ route('orders.invoice', $order) }}" class="text-green-600 hover:text-green-900 ml-2">PDF</a>
