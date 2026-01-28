@@ -28,7 +28,26 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+        $redirectTo = route('dashboard', absolute: false);
+
+        if (! $user->can('view dashboard')) {
+            if ($user->can('view orders')) {
+                $redirectTo = route('orders.index', absolute: false);
+            } elseif ($user->can('view leads')) {
+                $redirectTo = route('leads.index', absolute: false);
+            } elseif ($user->can('view products')) {
+                $redirectTo = route('products.index', absolute: false);
+            } elseif ($user->can('view campaigns')) {
+                $redirectTo = route('campaigns.index', absolute: false);
+            } elseif ($user->can('manage users')) {
+                $redirectTo = route('users.index', absolute: false);
+            } elseif ($user->can('view permissions')) {
+                $redirectTo = route('roles.index', absolute: false);
+            }
+        }
+
+        return redirect()->intended($redirectTo);
     }
 
     /**
