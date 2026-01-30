@@ -140,7 +140,7 @@
                         @auth
                             <div class="flex items-center gap-4">
                                 <!-- Notifications Dropdown -->
-                                <x-dropdown align="right" width="w-96">
+                                <x-dropdown align="right" width="w-72 sm:w-96">
                                     <x-slot name="trigger">
                                         <button class="inline-flex items-center p-2 border border-transparent text-sm leading-4 font-medium rounded-full text-gray-500 bg-white hover:text-gray-700 hover:bg-gray-100 focus:outline-none transition ease-in-out duration-150 relative">
                                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,7 +181,7 @@
                                 </x-dropdown>
 
                                 <!-- User Dropdown -->
-                                <x-dropdown align="left" width="48">
+                                <x-dropdown align="right" width="48">
                                     <x-slot name="trigger">
                                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                             <div class="flex items-center">

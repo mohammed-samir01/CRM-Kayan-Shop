@@ -51,24 +51,24 @@
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">معلومات العميل</h3>
                             <div class="space-y-3">
-                                <div class="flex">
-                                    <span class="text-gray-500 w-32">اسم العميل:</span>
+                                <div class="flex flex-col sm:flex-row">
+                                    <span class="text-gray-500 w-full sm:w-32">اسم العميل:</span>
                                     <span class="font-medium text-gray-900">{{ $order->lead->customer_name }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="text-gray-500 w-32">رقم الهاتف:</span>
+                                <div class="flex flex-col sm:flex-row">
+                                    <span class="text-gray-500 w-full sm:w-32">رقم الهاتف:</span>
                                     <span class="font-medium text-gray-900">{{ $order->lead->phone }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="text-gray-500 w-32">البريد الإلكتروني:</span>
+                                <div class="flex flex-col sm:flex-row">
+                                    <span class="text-gray-500 w-full sm:w-32">البريد الإلكتروني:</span>
                                     <span class="font-medium text-gray-900">{{ $order->lead->email ?? '-' }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="text-gray-500 w-32">المدينة:</span>
+                                <div class="flex flex-col sm:flex-row">
+                                    <span class="text-gray-500 w-full sm:w-32">المدينة:</span>
                                     <span class="font-medium text-gray-900">{{ $order->lead->city ?? '-' }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="text-gray-500 w-32">العنوان:</span>
+                                <div class="flex flex-col sm:flex-row">
+                                    <span class="text-gray-500 w-full sm:w-32">العنوان:</span>
                                     <span class="font-medium text-gray-900">{{ $order->lead->address ?? '-' }}</span>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                 <div class="p-6">
                     @forelse($activities as $activity)
                         <div class="border-b border-gray-200 pb-4 mb-4 last:border-0">
-                            <div class="flex justify-between items-start">
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                                 <span class="font-medium text-gray-900">{{ $activity->description }}</span>
                                 <span class="text-sm text-gray-500">{{ $activity->created_at->format('Y-m-d H:i') }}</span>
                             </div>
@@ -158,8 +158,8 @@
                         </tbody>
                         <tfoot>
                             <tr class="bg-gray-50">
-                                <td colspan="4" class="px-6 py-4 text-left text-sm font-medium text-gray-700">إجمالي الطلب:</td>
-                                <td class="px-6 py-4 text-left text-xl font-bold text-green-600">{{ number_format($order->total_value, 2) }} ج.م</td>
+                                <td colspan="6" class="px-6 py-4 text-left text-sm font-medium text-gray-700">إجمالي الطلب:</td>
+                                <td class="px-6 py-4 text-left text-xl font-bold text-green-600 whitespace-nowrap">{{ number_format($order->total_value, 2) }} ج.م</td>
                             </tr>
                         </tfoot>
                     </table>
